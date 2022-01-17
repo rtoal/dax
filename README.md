@@ -1,3 +1,5 @@
+![Logo](https://raw.githubusercontent.com/rtoal/dax/main/docs/daxlogo.png)
+
 # The Language Dax
 
 la la la Dax nice story here
