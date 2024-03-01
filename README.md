@@ -16,7 +16,7 @@ Dax features
 
 ```
 let
-  gcd = {x => {y ==> y == 0 ? x : gcd y (x % y)}};
+  gcd = {x => {y => y == 0 ? x : gcd y (x % y)}};
   z = 5
 in
   [1, 3, z] |> filter {x => x > 2} |> map {x => x ** 2} |> print

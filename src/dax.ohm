@@ -1,0 +1,52 @@
+Dax {
+  Program     = Exp
+  Exp         = ("-" | "!") Primary                         --unary
+              | Exp0 then Exp                               --then
+              | Exp0
+  Exp0        = Exp1 "|>" Exp0                              --pipe
+              | Exp1
+  Exp1        = Exp2 "?" Exp2 ":" Exp1                      --ternary
+              | Exp2      
+  Exp2        = Exp3 ("&&" Exp3)+                           --and
+              | Exp3 ("||" Exp3)+                           --or
+              | Exp3
+  Exp3        = Exp4 relop Exp4                             --compare
+              | Exp4
+  Exp4        = Exp4 ("+" | "-") Term                       --addsub
+              | Term
+  Term        = Term ("*" | "/" | "%") Factor               --muldiv
+              | Factor
+  Factor      = Primary "**" Factor                         --exponent
+              | Primary
+  Primary     = num
+              | true
+              | false
+              | stringlit
+              | let Dec (";" Dec)* in Exp kwend             --let
+              | id Primary+                                 --id_call
+              | id                                          --id
+              | "(" Exp ")" Primary+                        --paren_call
+              | "(" Exp ")"                                 --paren
+              | "[" ListOf<Exp, ","> "]"                    --array
+              | "{" id "=>" Exp "}" Primary+                --lambda_call
+              | "{" id "=>" Exp "}"                         --lambda
+  Dec         = id "=" Exp
+  relop       = "<=" | "<" | "==" | "!=" | ">=" | ">"
+  then        = "then" ~idchar
+  let         = "let" ~idchar
+  in          = "in" ~idchar
+  kwend       = "end" ~idchar
+  true        = "true" ~idchar
+  false       = "false" ~idchar
+  keyword     = then | let | in | kwend | true | false
+  id          = ~keyword letter idchar*
+  idchar      = letter | digit | "_"
+  num         = digit+ ("." digit+)? (("E" | "e") ("+" | "-")? digit+)?
+  stringlit   = "\"" char* "\""
+  char        = ~control ~"\\" ~"\"" any
+              | "\\" ("n" | "t" | "\"" | "\\")              --escape
+              | "\\u{" hex hex? hex? hex? hex? hex? "}"     --codepoint
+  control     = "\x00".."\x1f" | "\x80".."\x9f"
+  hex         = hexDigit
+  space      += "//" (~"\n" any)* "\n"                      -- comment
+}
