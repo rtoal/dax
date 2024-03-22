@@ -3,7 +3,7 @@ Dax {
   Exp         = ("-" | "!") Primary                         --unary
               | Exp0 then Exp                               --then
               | Exp0
-  Exp0        = Exp1 "|>" Exp0                              --pipe
+  Exp0        = Exp0 "|>" Exp1                              --pipe
               | Exp1
   Exp1        = Exp2 "?" Exp2 ":" Exp1                      --ternary
               | Exp2      
